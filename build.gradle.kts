@@ -170,3 +170,5 @@ tasks.jacocoTestReport {
 tasks.test {
 	finalizedBy(tasks.jacocoTestReport)
 }
+
+project.gradle.startParameter.excludedTaskNames.add("integrationTest")
