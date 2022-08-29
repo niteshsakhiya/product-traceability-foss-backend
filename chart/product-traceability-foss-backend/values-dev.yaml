@@ -1,5 +1,8 @@
 image:
-  tag: $ARGOCD_APP_REVISION
+  repository: ftcpro.azurecr.io/backend/traceability
+  pullPolicy: Always
+  tag: "latest"
+
 
 springprofile: dev
 
@@ -24,7 +27,7 @@ mailserver:
   password: <path:traceability-foss/data/dev#mailserverPassword>
 
 datasource:
-  url: jdbc:postgresql://traceability-database-postgresql:5432/trace
+  url: jdbc:postgresql://ftcpro-postgresql-primary.postgres:5432/trace
   username: trace
   password: <path:traceability-foss/data/dev/database#tracePassword>
 
