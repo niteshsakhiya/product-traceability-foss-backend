@@ -51,7 +51,7 @@ ingresses:
   ## Public / Internet facing Ingress
   - enabled: true
     # -- The hostname to be used to precisely map incoming traffic onto the underlying network service
-    hostname: trace-consumer-controlplane.dev.demo.catena-x.net
+    hostname: trace-consumer-controlplane.dev.demo.ftcpro.co
     # -- Additional ingress annotations to add
     annotations:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -69,10 +69,10 @@ ingresses:
 
 resources:
   limits:
-    cpu: 1.5
-    memory: 512Mi
+    cpu: 2
+    memory: 1024Mi
   requests:
-    cpu: 500m
+    cpu: 100m
     memory: 512Mi
 
 configuration:
@@ -91,39 +91,39 @@ configuration:
     edc.api.control.auth.apikey.key=X-Api-Key
     # Postgresql related configuration
     edc.datasource.asset.name=asset
-    edc.datasource.asset.url=jdbc:postgresql://traceability-database-postgresql-hl:5432/edc?currentSchema=consumer
+    edc.datasource.asset.url=jdbc:postgresql://ftcpro-postgresql-primary.postgres:5432/edc?currentSchema=consumer
     edc.datasource.asset.user=edc
     edc.datasource.contractdefinition.name=contractdefinition
-    edc.datasource.contractdefinition.url=jdbc:postgresql://traceability-database-postgresql-hl:5432/edc?currentSchema=consumer
+    edc.datasource.contractdefinition.url=jdbc:postgresql://ftcpro-postgresql-primary.postgres:5432/edc?currentSchema=consumer
     edc.datasource.contractdefinition.user=edc
     edc.datasource.contractnegotiation.name=contractnegotiation
-    edc.datasource.contractnegotiation.url=jdbc:postgresql://traceability-database-postgresql-hl:5432/edc?currentSchema=consumer
+    edc.datasource.contractnegotiation.url=jdbc:postgresql://ftcpro-postgresql-primary.postgres:5432/edc?currentSchema=consumer
     edc.datasource.contractnegotiation.user=edc
     edc.datasource.policy.name=policy
-    edc.datasource.policy.url=jdbc:postgresql://traceability-database-postgresql-hl:5432/edc?currentSchema=consumer
+    edc.datasource.policy.url=jdbc:postgresql://ftcpro-postgresql-primary.postgres:5432/edc?currentSchema=consumer
     edc.datasource.policy.user=edc
     edc.datasource.transferprocess.name=transferprocess
-    edc.datasource.transferprocess.url=jdbc:postgresql://traceability-database-postgresql-hl:5432/edc?currentSchema=consumer
+    edc.datasource.transferprocess.url=jdbc:postgresql://ftcpro-postgresql-primary.postgres:5432/edc?currentSchema=consumer
     edc.datasource.transferprocess.user=edc
-    edc.hostname=trace-consumer-controlplane.dev.demo.catena-x.net
+    edc.hostname=trace-consumer-controlplane.dev.demo.ftcpro.co
     edc.ids.catalog.id=urn:catalog:default
     edc.ids.description="Eclipse Dataspace Connector"
-    edc.ids.endpoint=https://trace-consumer-controlplane.dev.demo.catena-x.net/BPNL00000003CML1/api/v1/ids
-    ids.webhook.address=https://trace-consumer-controlplane.dev.demo.catena-x.net
+    edc.ids.endpoint=https://trace-consumer-controlplane.dev.demo.ftcpro.co/BPNL00000003CML1/api/v1/ids
+    ids.webhook.address=https://trace-consumer-controlplane.dev.demo.ftcpro.co
     edc.ids.id=urn:connector:edc
     edc.ids.security.profile=base
     edc.ids.title="Eclipse Dataspace Connector"
     edc.receiver.http.endpoint=http://trace-api-wrapper:9192/callback/endpoint-data-reference
-    edc.transfer.proxy.endpoint=https://trace-consumer-dataplane.dev.demo.catena-x.net/api/public
+    edc.transfer.proxy.endpoint=https://trace-consumer-dataplane.dev.demo.ftcpro.co/api/public
     edc.transfer.proxy.token.verifier.publickey.alias=token-signer-cert-dev
     edc.transfer.proxy.token.signer.privatekey.alias=token-signer-cert-key-dev
-    edc.vault.hashicorp.url=https://vault.demo.catena-x.net
+    edc.vault.hashicorp.url=https://vault.dev.ftcpro.co/
     edc.vault.hashicorp.health.check.enabled=true
     edc.vault.hashicorp.health.check.standby.ok=true
-    edc.vault.hashicorp.api.secret.path=/v1/traceability-foss
+    edc.vault.hashicorp.api.secret.path=/traceability-foss
     edc.oauth.public.key.alias=daps-cert-dev
     edc.oauth.private.key.alias=daps-cert-key-dev
     edc.oauth.client.id=60:99:BC:FC:9B:F9:5D:58:C4:94:1D:02:65:3E:88:B6:F9:C7:23:B3:keyid:60:99:BC:FC:9B:F9:5D:58:C4:94:1D:02:65:3E:88:B6:F9:C7:23:B3
     edc.oauth.provider.audience=idsc:IDS_CONNECTORS_ALL
-    edc.oauth.provider.jwks.url=https://daps1.int.demo.catena-x.net/.well-known/jwks.json
-    edc.oauth.token.url=https://daps1.int.demo.catena-x.net/token
+    edc.oauth.provider.jwks.url=https://daps.dev.demo.ftcpro.co/.well-known/jwks.json
+    edc.oauth.token.url=https://daps.dev.demo.ftcpro.co/token
