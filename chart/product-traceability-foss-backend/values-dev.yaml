@@ -13,13 +13,13 @@ ingress:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
-    - host: "traceability.dev.demo.catena-x.net"
+    - host: "traceability.dev.demo.ftcpro.co"
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - hosts:
-      - "traceability.dev.demo.catena-x.net"
+      - "traceability.dev.demo.ftcpro.co"
       # Default secret for certificate creation already provided to your namespace
       secretName: trace-backend-tls-secret
 
