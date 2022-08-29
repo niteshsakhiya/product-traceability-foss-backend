@@ -3,6 +3,7 @@ image:
   pullPolicy: Always
   tag: "latest"
 
+namespace: traceability
 
 springprofile: dev
 
