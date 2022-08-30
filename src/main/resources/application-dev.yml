@@ -23,17 +23,17 @@ spring:
       client:
         provider:
           keycloak:
-            token-uri: https://centralidp.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token
+            token-uri: https://centralidp.demo.ftcpro.co/auth/realms/CX-Central/protocol/openid-connect/token
 
 keycloak:
-  auth-server-url: https://centralidp.dev.demo.catena-x.net/auth
+  auth-server-url: https://centralidp.dev.demo.ftcpro.co/auth
   realm: CX-Central
   resource: Cl10-CX-Part
   public-client: true
 
 feign:
   bpnApi:
-    url: "https://catenax-bpdm-int.demo.catena-x.net/"
+    url: "https://catenax-bpdm-int.demo.ftcpro.co/"
   irsApi:
-    url: "https://irs.dev.demo.catena-x.net"
+    url: "https://irs.dev.demo.ftcpro.co"
     globalAssetId: "urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"
