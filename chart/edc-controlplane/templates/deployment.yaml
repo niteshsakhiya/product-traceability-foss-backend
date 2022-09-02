@@ -102,8 +102,6 @@ spec:
             - name: configuration
               mountPath: /app/logging.properties
               subPath: logging.properties
-            - name: daps-auth
-              mountPath: /app/daps-auth
       volumes:
         - name: configuration
           configMap:
@@ -115,9 +113,6 @@ spec:
                 path: opentelemetry.properties
               - key: logging.properties
                 path: logging.properties
-        - name: daps-auth
-          secret:
-            secretName: daps-auth
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

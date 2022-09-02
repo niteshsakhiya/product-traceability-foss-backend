@@ -121,8 +121,8 @@ configuration:
     edc.vault.hashicorp.health.check.enabled=true
     edc.vault.hashicorp.health.check.standby.ok=true
     edc.vault.hashicorp.api.secret.path=/traceability-foss
-    edc.oauth.public.key.alias=/app/daps-auth/daps-cert-dev
-    edc.oauth.private.key.alias=/app/daps-auth/daps-cert-key-dev
+    edc.oauth.public.key.alias=/dev/edc/daps
+    edc.oauth.private.key.alias=/dev/edc/daps
     edc.oauth.client.id=60:99:BC:FC:9B:F9:5D:58:C4:94:1D:02:65:3E:88:B6:F9:C7:23:B3:keyid:60:99:BC:FC:9B:F9:5D:58:C4:94:1D:02:65:3E:88:B6:F9:C7:23:B3
     edc.oauth.provider.audience=idsc:IDS_CONNECTORS_ALL
     edc.oauth.provider.jwks.url=https://daps.dev.demo.ftcpro.co/.well-known/jwks.json
