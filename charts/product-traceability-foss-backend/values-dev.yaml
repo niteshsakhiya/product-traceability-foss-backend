@@ -38,3 +38,10 @@ keycloak:
     clientSecret: <path:traceability-foss/data/dev/keycloak/oauth2#clientSecret>
 
 
+resources:
+  limits:
+    cpu: 2
+    memory: 2048Mi
+  requests:
+    cpu: 100m
+    memory: 100Mi
