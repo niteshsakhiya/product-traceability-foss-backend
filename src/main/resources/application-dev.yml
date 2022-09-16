@@ -43,3 +43,7 @@ feign:
   registryApi:
     url: https://semantics.int.demo.ftcpro.co/registry
 
+cors:
+  origins: >
+    http://localhost:4200/,
+    https://traceability-portal.dev.demo.ftcpro.co/
