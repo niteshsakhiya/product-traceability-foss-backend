@@ -30,7 +30,7 @@ spring:
 keycloak:
   auth-server-url: https://centralidp.dev.demo.ftcpro.co/auth
   realm: CX-Central
-  resource: Cl10-CX-Part
+  resource: catenax-trace-x
   public-client: true
   use-resource-role-mappings: true
 
