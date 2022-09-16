@@ -6,3 +6,5 @@
 application-local.yml
 .DS_Store
 .github/
+*.tgz
+Chart.lock

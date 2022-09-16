@@ -16,7 +16,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 ################################################################################
-
 spring:
   security:
     oauth2:
@@ -30,10 +29,10 @@ keycloak:
   realm: CX-Central
   resource: Cl10-CX-Part
   public-client: true
+  use-resource-role-mappings: true
 
 feign:
-  bpnApi:
-    url: "https://catenax-bpdm-int.demo.catena-x.net/"
   irsApi:
     url: "https://irs.dev.demo.catena-x.net"
-    globalAssetId: "urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"
+  registryApi:
+    url: https://semantics.int.demo.catena-x.net/registry

@@ -41,6 +41,16 @@ sonarqube {
 		property("sonar.host.url", "https://sonarcloud.io")
 		property("sonar.projectKey", "catenax-ng_product-traceability-foss-backend")
 		property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/jacoco/*.xml")
+		property("sonar.coverage.exclusions", listOf(
+				"src/main/java/net/catenax/traceability/generated/**",
+				"src/main/java/net/catenax/traceability/openapi/**",
+				"src/main/java/net/catenax/traceability/TraceabilityApplication.java",
+				"src/main/java/net/catenax/traceability/common/**",
+				"src/main/java/net/catenax/traceability/assets/domain/model/**",
+				"src/main/java/net/catenax/traceability/assets/infrastructure/**",
+				"src/main/java/net/catenax/traceability/assets/config/**"
+			)
+		)
 	}
 }
 
@@ -49,14 +59,17 @@ val groovyVersion = "3.0.10"
 val spockBomVersion = "2.1-groovy-3.0"
 val greenmailVersion = "1.6.9"
 val springfoxVersion = "3.0.0"
-val keycloakVersion = "18.0.0"
+val keycloakVersion = "19.0.2"
 val feignVersion = "11.8"
 val springCloudVersion = "2021.0.1"
+val springBootSecurityOauth2Version = "2.6.8"
 val jacksonDatabindNullableVersion = "0.2.2"
 val scribejavaVersion = "8.0.0"
 val findBugsVersion = "3.0.2"
 val restitoVersion = "0.9.5"
 val resilience4jVersion = "1.7.0"
+val testContainersVersion = "1.17.3"
+val schedlockVersion = "4.41.0"
 
 dependencyManagement {
 	imports {
@@ -78,7 +91,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-cache")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 
-	implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure")
+	implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:$springBootSecurityOauth2Version")
 
 	implementation("org.springframework.data:spring-data-commons")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -98,6 +111,9 @@ dependencies {
 	implementation("org.keycloak:keycloak-spring-boot-starter:$keycloakVersion")
 
 	implementation("io.springfox:springfox-boot-starter:$springfoxVersion")
+	implementation("net.javacrumbs.shedlock:shedlock-spring:$schedlockVersion")
+	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$schedlockVersion")
+
 
 	// for demo purposes, to be removed once EDC works
 	implementation("com.github.javafaker:javafaker:1.0.2") {
@@ -116,8 +132,8 @@ dependencies {
     testImplementation("org.spockframework:spock-core")
     testImplementation("org.spockframework:spock-spring")
 
-	integrationImplementation("org.testcontainers:postgresql:1.17.3")
-	integrationImplementation("org.testcontainers:spock:1.17.3")
+	integrationImplementation("org.testcontainers:postgresql:$testContainersVersion")
+	integrationImplementation("org.testcontainers:spock:$testContainersVersion")
 
 	integrationImplementation("org.springframework.boot:spring-boot-starter-test")
 	integrationImplementation("org.springframework.security:spring-security-test")
@@ -130,8 +146,8 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
-tasks.create<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("generateBpnApi") {
-	inputSpec.set("${project.rootDir}/openapi/bpn.yaml")
+tasks.create<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("generateAasRegistryApi") {
+	inputSpec.set("${project.rootDir}/openapi/aas-registry-openapi.yaml")
 	outputDir.set("${buildDir}/openapi")
 	validateSpec.set(false)
 
@@ -139,8 +155,8 @@ tasks.create<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("gener
 
 	library.set("feign")
 	generatorName.set("java")
-	apiPackage.set("net.catenax.traceability.assets.infrastructure.adapters.openapi.bpn")
-	modelPackage.set("net.catenax.traceability.assets.infrastructure.adapters.openapi.bpn")
+	apiPackage.set("net.catenax.traceability.assets.infrastructure.adapters.openapi.registry")
+	modelPackage.set("net.catenax.traceability.assets.infrastructure.adapters.openapi.registry")
 	configOptions.put("sourceFolder", "src/main/java")
 }
 
@@ -155,7 +171,7 @@ tasks.withType<org.openapitools.generator.gradle.plugin.tasks.GenerateTask> {
 }
 
 tasks.withType<JavaCompile> {
-	dependsOn("generateBpnApi")
+	dependsOn("generateAasRegistryApi")
 }
 
 tasks.jacocoTestReport {
@@ -165,6 +181,21 @@ tasks.jacocoTestReport {
 		csv.required.set(false)
 		html.required.set(false)
 	}
+	classDirectories.setFrom(
+		files(classDirectories.files.map {
+			fileTree(it) {
+				exclude(
+					"net/catenax/traceability/generated/**",
+					"net/catenax/traceability/openapi/**",
+					"net/catenax/traceability/*Application.class",
+					"net/catenax/traceability/common/**",
+					"net/catenax/traceability/assets/domain/model/**",
+					"net/catenax/traceability/assets/infrastructure/**",
+					"net/catenax/traceability/assets/config/**"
+				)
+			}
+		})
+	)
 }
 
 tasks.test {

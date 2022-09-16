@@ -25,13 +25,19 @@ components:
       bearerFormat: JWT
 
 security:
-  - bearerAuth: []
+  bearerAuth:
+    type: http
+    scheme: bearer
+    bearerFormat: JWT
 
 swagger:
   operations:
     api.assets:
       summary: "Returns all assets"
       notes: "The results are paginated"
+      authorizations: "#components/securitySchemes/bearerAuth"
+    api.assets.countries:
+      summary: "Returns counts of assets manufactured countries"
       authorizations: "#components/securitySchemes/bearerAuth"
     api.assets.sync:
       summary: "Synchronizes assets from IRS"
@@ -50,4 +56,7 @@ swagger:
     api.dashboard:
       summary: "Returns dashboard related data"
       notes: "The endpoint can return limited data based on the user role"
+      authorizations: "#components/securitySchemes/bearerAuth"
+    api.registry.reload:
+      summary: "Reloads shell descriptors and synchronizes assets"
       authorizations: "#components/securitySchemes/bearerAuth"

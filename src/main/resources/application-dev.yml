@@ -16,6 +16,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 ################################################################################
+traceability:
+  bpn: BPNL00000003AXS3
 
 spring:
   security:
@@ -30,6 +32,7 @@ keycloak:
   realm: CX-Central
   resource: Cl10-CX-Part
   public-client: true
+  use-resource-role-mappings: true
 
 feign:
   bpnApi:
@@ -37,3 +40,6 @@ feign:
   irsApi:
     url: "https://irs.dev.demo.ftcpro.co"
     globalAssetId: "urn:uuid:d387fa8e-603c-42bd-98c3-4d87fef8d2bb"
+  registryApi:
+    url: https://semantics.int.demo.ftcpro.co/registry
+

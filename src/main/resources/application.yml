@@ -16,6 +16,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 ################################################################################
+traceability:
+  bpn: BPNL00000003AXS3
 
 server:
   servlet:
@@ -40,6 +42,10 @@ management:
     port: 8081
 
 spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   security:
     oauth2:
       client:
@@ -67,7 +73,7 @@ feign:
     enabled: true
   hystrix:
     enabled: false
-  bpnApi:
+  default:
     connectionTimeoutMillis: 200
     readTimeoutMillis: 500
     maxIdleConnections: 10
@@ -89,8 +95,8 @@ resilience4j:
   retry:
     instances:
       irs-get:
-        resultPredicate: 'net.catenax.traceability.assets.infrastructure.adapters.openapi.irs.JobRunning'
-        maxAttempts: 5
-        waitDuration: 10s
+        resultPredicate: 'net.catenax.traceability.assets.infrastructure.adapters.feign.irs.JobRunning'
+        maxAttempts: 10
+        waitDuration: 30s
         enableExponentialBackoff: true
         exponentialBackoffMultiplier: 2
