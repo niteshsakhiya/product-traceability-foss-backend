@@ -1,0 +1,47 @@
+image:
+  repository: ftcpro.azurecr.io/backend/traceability-test
+  pullPolicy: Always
+  tag: "latest"
+
+springprofile: dev
+
+namespace: traceability1
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: "trace-1.dev.demo.ftcpro.co"
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - hosts:
+      - "trace-1.dev.demo.ftcpro.co"
+      # Default secret for certificate creation already provided to your namespace
+      secretName: trace-backend-tls-secret
+
+mailserver:
+  password: <path:traceability-foss/data/dev#mailserverPassword>
+
+datasource:
+  url: jdbc:postgresql://ftcpro-postgresql-primary.postgres:5432/trace1
+  username: trace
+  password: <path:traceability-foss/data/dev/database#tracePassword>
+
+keycloak:
+  oauth2:
+    clientId: <path:traceability-foss/data/dev/keycloak/oauth2#clientId>
+    clientSecret: <path:traceability-foss/data/dev/keycloak/oauth2#clientSecret>
+
+
+resources:
+  limits:
+    cpu: 2
+    memory: 2048Mi
+  requests:
+    cpu: 50m
+    memory: 50Mi
