@@ -22,8 +22,10 @@ package net.catenax.traceability.assets.infrastructure.adapters.jpa.asset;
 import net.catenax.traceability.assets.domain.model.Asset;
 import net.catenax.traceability.assets.domain.model.Asset.ChildDescriptions;
 import net.catenax.traceability.assets.domain.model.AssetNotFoundException;
+import net.catenax.traceability.assets.domain.model.InvestigationStatus;
 import net.catenax.traceability.assets.domain.model.PageResult;
 import net.catenax.traceability.assets.domain.ports.AssetRepository;
+import net.catenax.traceability.assets.infrastructure.adapters.jpa.asset.AssetEntity.PendingInvestigation;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -60,6 +62,16 @@ public class PersistentAssetsRepository implements AssetRepository {
 	}
 
 	@Override
+	public PageResult<Asset> getSupplierAssets(Pageable pageable) {
+		return new PageResult<>(assetsRepository.findBySupplierPartIsTrue(pageable), this::toAsset);
+	}
+
+	@Override
+	public PageResult<Asset> getOwnAssets(Pageable pageable) {
+		return new PageResult<>(assetsRepository.findBySupplierPartIsFalse(pageable), this::toAsset);
+	}
+
+	@Override
 	public List<Asset> getAssets() {
 		return toAssets(assetsRepository.findAll());
 	}
@@ -67,6 +79,14 @@ public class PersistentAssetsRepository implements AssetRepository {
 	@Override
 	public Asset save(Asset asset) {
 		return toAsset(assetsRepository.save(toEntity(asset)));
+	}
+
+	@Override
+	public void startInvestigation(List<String> assetIds, String description) {
+		assetsRepository.findByIdIn(assetIds).forEach(entity -> {
+			entity.setPendingInvestigation(PendingInvestigation.newInvestigation(entity.getId(), description));
+			assetsRepository.save(entity);
+		});
 	}
 
 	@Override
@@ -80,8 +100,18 @@ public class PersistentAssetsRepository implements AssetRepository {
 	}
 
 	@Override
+	public long countMyAssets() {
+		return assetsRepository.countBySupplierPartIsFalse();
+	}
+
+	@Override
 	public void clean() {
 		assetsRepository.deleteAll();
+	}
+
+	@Override
+	public long countPendingInvestigations() {
+		return assetsRepository.countByPendingInvestigationStatus(InvestigationStatus.PENDING);
 	}
 
 	private List<Asset> toAssets(List<AssetEntity> entities) {
@@ -102,11 +132,13 @@ public class PersistentAssetsRepository implements AssetRepository {
 			asset.getNameAtManufacturer(),
 			asset.getManufacturerPartId(),
 			asset.getManufacturerId(),
+			asset.getBatchId(),
 			asset.getManufacturerName(),
 			asset.getNameAtCustomer(),
 			asset.getCustomerPartId(),
 			asset.getManufacturingDate(),
 			asset.getManufacturingCountry(),
+			asset.isSupplierPart(),
 			asset.getChildDescriptions().stream()
 				.map(child -> new ChildDescription(child.id(), child.idShort()))
 				.toList(),
@@ -120,14 +152,17 @@ public class PersistentAssetsRepository implements AssetRepository {
 			entity.getNameAtManufacturer(),
 			entity.getManufacturerPartId(),
 			entity.getManufacturerId(),
+			entity.getBatchId(),
 			entity.getManufacturerName(),
 			entity.getNameAtCustomer(),
 			entity.getCustomerPartId(),
 			entity.getManufacturingDate(),
 			entity.getManufacturingCountry(),
+			entity.isSupplierPart(),
 			entity.getChildDescriptors().stream()
 					.map(child -> new ChildDescriptions(child.getId(), child.getIdShort()))
 					.toList(),
+			entity.isOnInvestigation(),
 			entity.getQualityType()
 		);
 	}

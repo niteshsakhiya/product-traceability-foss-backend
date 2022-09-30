@@ -25,6 +25,9 @@ ingress:
       secretName: trace-backend-tls-secret
 
 mailserver:
+  host: "smtp.eu.mailgun.org"
+  port: "587"
+  username: "notifications@emails.ftcpro.co"
   password: <path:traceability-foss/data/dev#mailserverPassword>
 
 datasource:

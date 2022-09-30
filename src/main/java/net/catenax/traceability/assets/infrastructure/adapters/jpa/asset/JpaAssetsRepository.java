@@ -19,9 +19,19 @@
 
 package net.catenax.traceability.assets.infrastructure.adapters.jpa.asset;
 
+import net.catenax.traceability.assets.domain.model.InvestigationStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface JpaAssetsRepository extends JpaRepository<AssetEntity, String> {
+	Page<AssetEntity> findBySupplierPartIsTrue(Pageable pageable);
+	Page<AssetEntity> findBySupplierPartIsFalse(Pageable pageable);
+	List<AssetEntity> findByIdIn(List<String> assetIds);
+	long countBySupplierPartIsFalse();
+	long countByPendingInvestigationStatus(InvestigationStatus status);
 }

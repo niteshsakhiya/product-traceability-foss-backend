@@ -12,7 +12,6 @@ ingress:
   className: "nginx"
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
     - host: "traceability.dev.demo.ftcpro.co"
       paths:
@@ -25,6 +24,9 @@ ingress:
       secretName: trace-backend-tls-secret
 
 mailserver:
+  host: "smtp.eu.mailgun.org"
+  port: "587"
+  username: "notifications@emails.ftcpro.co"
   password: <path:traceability-foss/data/dev#mailserverPassword>
 
 datasource:
@@ -37,7 +39,6 @@ keycloak:
     clientId: <path:traceability-foss/data/dev/keycloak/oauth2#clientId>
     clientSecret: <path:traceability-foss/data/dev/keycloak/oauth2#clientSecret>
 
-
 resources:
   limits:
     cpu: 2
@@ -45,3 +46,6 @@ resources:
   requests:
     cpu: 100m
     memory: 100Mi
+
+irs:
+  enabled: false

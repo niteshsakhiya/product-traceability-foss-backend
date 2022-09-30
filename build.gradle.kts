@@ -41,6 +41,10 @@ sonarqube {
 		property("sonar.host.url", "https://sonarcloud.io")
 		property("sonar.projectKey", "catenax-ng_product-traceability-foss-backend")
 		property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/jacoco/*.xml")
+		property("sonar.cpd.exclusions", listOf(
+				"src/main/java/net/catenax/traceability/assets/infrastructure/adapters/jpa/**",
+			)
+		)
 		property("sonar.coverage.exclusions", listOf(
 				"src/main/java/net/catenax/traceability/generated/**",
 				"src/main/java/net/catenax/traceability/openapi/**",
@@ -144,6 +148,7 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.create<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("generateAasRegistryApi") {
@@ -175,6 +180,7 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.jacocoTestReport {
+	executionData.setFrom(fileTree("${project.buildDir}").include("/jacoco/*.exec"))
 	reports {
 		xml.required.set(true)
 		xml.outputLocation.set(File("${project.buildDir}/jacoco/jacocoTestReport.xml"))
@@ -197,6 +203,7 @@ tasks.jacocoTestReport {
 		})
 	)
 }
+
 
 tasks.test {
 	finalizedBy(tasks.jacocoTestReport)

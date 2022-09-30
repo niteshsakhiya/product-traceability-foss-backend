@@ -32,13 +32,23 @@ public interface AssetRepository {
 
 	PageResult<Asset> getAssets(Pageable pageable);
 
+	PageResult<Asset> getSupplierAssets(Pageable pageable);
+
+	PageResult<Asset> getOwnAssets(Pageable pageable);
+
 	List<Asset> getAssets();
 
 	Asset save(Asset asset);
+
+	void startInvestigation(List<String> assetIds, String description);
 
 	List<Asset> saveAll(List<Asset> assets);
 
     long countAssets();
 
+	long countMyAssets();
+
 	void clean();
+
+	long countPendingInvestigations();
 }

@@ -57,6 +57,16 @@ public class AssetsController {
 		return assetRepository.getAssets(pageable);
 	}
 
+	@GetMapping("/assets/supplier")
+	public PageResult<Asset> supplierAssets(Pageable pageable) {
+		return assetRepository.getSupplierAssets(pageable);
+	}
+
+	@GetMapping("/assets/my")
+	public PageResult<Asset> ownAssets(Pageable pageable) {
+		return assetRepository.getOwnAssets(pageable);
+	}
+
 	@GetMapping("/assets/countries")
 	public Map<String, Long> assetsCountryMap() {
 		return assetFacade.getAssetsCountryMap();
@@ -65,6 +75,11 @@ public class AssetsController {
 	@GetMapping("/assets/{assetId}")
 	public Asset asset(@PathVariable String assetId) {
 		return assetRepository.getAssetById(assetId);
+	}
+
+	@PostMapping("/investigations")
+	public void investigateAssets(@RequestBody Investigations investigations) {
+		assetFacade.startInvestigation(investigations.partIds(), investigations.description());
 	}
 
 	@GetMapping("/assets/{assetId}/children/{childId}")

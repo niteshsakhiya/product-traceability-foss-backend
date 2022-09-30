@@ -35,12 +35,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 public class AssetsConverter {
 
-	private static final String EMPTY_TEXT = "--";
+	public static final String EMPTY_TEXT = "--";
 
 	private final ObjectMapper mapper = new ObjectMapper()
 		.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
@@ -58,26 +59,34 @@ public class AssetsConverter {
 	}
 
 	public List<Asset> convertAssets(JobResponse response)  {
-			List<SerialPartTypization> parts = response.serialPartTypizations();
-			Map<String, AssemblyPartRelationship> relationships = response.assemblyPartRelationships();
-			Map<String, String> shortIds = response.shells().stream()
-				.collect(Collectors.toMap(Shell::identification, Shell::idShort));
+		List<SerialPartTypization> parts = response.serialPartTypizations();
+		Map<String, AssemblyPartRelationship> relationships = response.assemblyPartRelationships();
+		Map<String, String> shortIds = response.shells().stream()
+			.collect(Collectors.toMap(Shell::identification, Shell::idShort));
+		Set<String> supplierParts = relationships.values().stream()
+			.flatMap(a -> a.childParts().stream())
+			.map(ChildPart::childCatenaXId)
+			.collect(Collectors.toSet());
 
-			return parts.stream()
-				.map(part -> new Asset(
-					part.catenaXId(),
-					shortIds.get(part.catenaXId()),
-					defaultValue(part.partTypeInformation().nameAtManufacturer()),
-					defaultValue(part.partTypeInformation().manufacturerPartID()),
-					manufacturerId(part),
-					manufacturerName(part, response.bpns()),
-					defaultValue(part.partTypeInformation().nameAtCustomer()),
-					defaultValue(part.partTypeInformation().customerPartId()),
-					manufacturingDate(part),
-					manufacturingCountry(part),
-					getChildParts(relationships, shortIds, part.catenaXId()),
-					QualityType.OK
-				)).toList();
+
+		return parts.stream()
+			.map(part -> new Asset(
+				part.catenaXId(),
+				shortIds.get(part.catenaXId()),
+				defaultValue(part.partTypeInformation().nameAtManufacturer()),
+				defaultValue(part.partTypeInformation().manufacturerPartID()),
+				manufacturerId(part),
+				batchId(part),
+				manufacturerName(part, response.bpns()),
+				defaultValue(part.partTypeInformation().nameAtCustomer()),
+				defaultValue(part.partTypeInformation().customerPartId()),
+				manufacturingDate(part),
+				manufacturingCountry(part),
+				supplierParts.contains(part.catenaXId()),
+				getChildParts(relationships, shortIds, part.catenaXId()),
+				false,
+				QualityType.OK
+			)).toList();
 	}
 
 	public String manufacturerName(SerialPartTypization part, Map<String, String> bpns) {
@@ -86,13 +95,12 @@ public class AssetsConverter {
 	}
 
 	public String manufacturerId(SerialPartTypization part) {
-		if (part.localIdentifiers() == null) {
-			return EMPTY_TEXT;
-		}
-		return part.localIdentifiers().stream()
-			.filter(localId -> localId.type() == LocalIdType.MANUFACTURER_ID)
-			.findFirst()
-			.map(LocalId::value)
+		return part.getLocalId(LocalIdType.MANUFACTURER_ID)
+			.orElse(EMPTY_TEXT);
+	}
+
+	public String batchId(SerialPartTypization part) {
+		return part.getLocalId(LocalIdType.BATCH_ID)
 			.orElse(EMPTY_TEXT);
 	}
 

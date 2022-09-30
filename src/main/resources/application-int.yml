@@ -16,6 +16,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 ################################################################################
+traceability:
+  bpn: BPNL00000003AXS3
+  registry.manufacturerIdKey: manufacturerId
+
 spring:
   security:
     oauth2:
@@ -25,14 +29,14 @@ spring:
             token-uri: https://centralidp.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token
 
 keycloak:
-  auth-server-url: https://centralidp.dev.demo.catena-x.net/auth
+  auth-server-url: https://centralidp.demo.catena-x.net/auth
   realm: CX-Central
-  resource: Cl10-CX-Part
+  resource: Cl17-CX-Part
   public-client: true
   use-resource-role-mappings: true
 
 feign:
   irsApi:
-    url: "https://irs.dev.demo.catena-x.net"
+    url: https://irs.dev.demo.catena-x.net
   registryApi:
-    url: https://semantics.int.demo.catena-x.net/registry
+    url: https://irs-aas-registry.dev.demo.catena-x.net

@@ -30,13 +30,16 @@ public final class Asset {
 	private final String nameAtManufacturer;
 	private final String manufacturerPartId;
 	private final String manufacturerId;
+	private final String batchId;
 	private String manufacturerName;
 	private final String nameAtCustomer;
 	private final String customerPartId;
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private final Instant manufacturingDate;
 	private final String manufacturingCountry;
+	private final boolean supplierPart;
 	private List<ChildDescriptions> childDescriptions;
+	private boolean underInvestigation;
 	private QualityType qualityType;
 
 	public Asset(
@@ -45,12 +48,15 @@ public final class Asset {
 		String nameAtManufacturer,
 		String manufacturerPartId,
 		String manufacturerId,
+		String batchId,
 		String manufacturerName,
 		String nameAtCustomer,
 		String customerPartId,
 		Instant manufacturingDate,
 		String manufacturingCountry,
+		boolean supplierPart,
 		List<ChildDescriptions> childDescriptions,
+		boolean underInvestigation,
 		QualityType qualityType
 	) {
 		this.id = id;
@@ -58,13 +64,20 @@ public final class Asset {
 		this.nameAtManufacturer = nameAtManufacturer;
 		this.manufacturerPartId = manufacturerPartId;
 		this.manufacturerId = manufacturerId;
+		this.batchId = batchId;
 		this.manufacturerName = manufacturerName;
 		this.nameAtCustomer = nameAtCustomer;
 		this.customerPartId = customerPartId;
 		this.manufacturingDate = manufacturingDate;
 		this.manufacturingCountry = manufacturingCountry;
+		this.supplierPart = supplierPart;
 		this.childDescriptions = childDescriptions;
+		this.underInvestigation = underInvestigation;
 		this.qualityType = qualityType;
+	}
+
+	public String getBatchId() {
+		return batchId;
 	}
 
 	public void updateQualityType(QualityType qualityType) {
@@ -111,12 +124,20 @@ public final class Asset {
 		return manufacturingCountry;
 	}
 
+	public boolean isSupplierPart() {
+		return supplierPart;
+	}
+
 	public List<ChildDescriptions> getChildDescriptions() {
 		return childDescriptions;
 	}
 
 	public QualityType getQualityType() {
 		return qualityType;
+	}
+
+	public boolean isUnderInvestigation() {
+		return underInvestigation;
 	}
 
 	public record ChildDescriptions(String id, String idShort) {}
