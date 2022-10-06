@@ -51,4 +51,4 @@ resources:
     memory: 50Mi
 
 env:
-  - BPN_NUMBER: "BPNL00000002AXS2"
+  BPN_NUMBER: "BPNL00000002AXS2"
