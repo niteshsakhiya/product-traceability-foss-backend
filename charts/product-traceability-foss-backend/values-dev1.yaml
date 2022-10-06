@@ -48,3 +48,6 @@ resources:
   requests:
     cpu: 50m
     memory: 50Mi
+
+env:
+  - BPN_NUMBER: "BPNL00000001AXS1"
